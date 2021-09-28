@@ -14,10 +14,26 @@ namespace Expresso.Tests
         [InlineData("FALSE", false)]
         public async Task Parses_boolean_literals(string text, bool expectedResult)
         {
+            (await Evaluate(text)).ShouldBe(expectedResult);
+        }
+
+        [Theory]
+        [InlineData("true and true", true)]
+        [InlineData("true and false", false)]
+        [InlineData("false and true", false)]
+        [InlineData("false and false", false)]
+        [InlineData("TRUE AND TRUE", true)]
+        public async Task Logical_and_boolean_literals(string text, bool expectedResult)
+        {
+            (await Evaluate(text)).ShouldBe(expectedResult);
+        }
+
+        private async Task<bool> Evaluate(string text)
+        {
             ExpressoParser.TryParse(text, out Expression? expression, out _).ShouldBeTrue();
             expression.ShouldNotBeNull();            
             var result = await expression.EvaluateAsync(new ExpressoContext());
-            result.ToBooleanValue().ShouldBe(expectedResult);
+            return result.ToBooleanValue();
         }
     }
 }

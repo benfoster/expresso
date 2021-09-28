@@ -1,3 +1,4 @@
+using System.Linq;
 using Expresso.Ast;
 using Expresso.Values;
 using Parlot;
@@ -12,6 +13,8 @@ namespace Expresso
 
         protected static readonly Parser<string> True = Terms.Text("true", true);
         protected static readonly Parser<string> False = Terms.Text("false", true);
+        protected static readonly Parser<string> BinaryAnd = Terms.Text("and", true);
+
         protected static readonly Deferred<Expression> Primary = Deferred<Expression>();
         
         static ExpressoParser()
@@ -21,7 +24,24 @@ namespace Expresso
                 True.Then<Expression>(x => new LiteralExpression(BooleanValue.True))
                 .Or(False.Then<Expression>(x => new LiteralExpression(BooleanValue.False)));
 
-            ExpressionParser = Primary;
+            var logicalExpression = Primary.And(ZeroOrMany(BinaryAnd.And(Primary))).Then(x =>
+            {
+                var result = x.Item1;
+
+                foreach (var op in Enumerable.Reverse(x.Item2)) // Need to reverse to be right associative
+                {
+                    result = op.Item1.ToLowerInvariant() switch
+                    {
+                        "and" => new AndExpression(result, op.Item2),
+                        _ => result
+                    };
+                }
+
+                return result;
+            });
+            
+            
+            ExpressionParser = logicalExpression;
         }
 
         public static bool TryParse(string text, out Expression? expression, out ParseError error)
