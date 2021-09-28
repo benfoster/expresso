@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Expresso.Ast;
 using Shouldly;
@@ -82,11 +83,23 @@ namespace Expresso.Tests
             (await Evaluate(text)).ShouldBe(expectedResult);
         }
 
-        private async Task<bool> Evaluate(string text)
+        [Theory]
+        [InlineData("price > 10 ", true)]
+        public async Task Supports_integer_variables(string text, bool expectedResult)
+        {
+            var variables = new Dictionary<string, object>
+            {
+                { "price", 100 }
+            };
+            
+            (await Evaluate(text, variables)).ShouldBe(expectedResult);
+        }
+
+        private async Task<bool> Evaluate(string text, Dictionary<string, object>? variables = null)
         {
             ExpressoParser.TryParse(text, out Expression? expression, out _).ShouldBeTrue();
             expression.ShouldNotBeNull();            
-            var result = await expression.EvaluateAsync(new ExpressoContext());
+            var result = await expression.EvaluateAsync(new ExpressoContext(variables));
             return result.ToBooleanValue();
         }
     }

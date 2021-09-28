@@ -23,12 +23,15 @@ namespace Expresso
         static ExpressoParser()
         {
             var expression = Deferred<Expression>();
+
+            var identifier = Terms.Identifier();
             
             // primary => NUMBER | STRING | BOOLEAN | property
             var literal =
                 Terms.Decimal(NumberOptions.AllowSign).Then<Expression>(x => new LiteralExpression(NumericValue.Create(x)))
                     .Or(True.Then<Expression>(x => new LiteralExpression(BooleanValue.True)))
-                    .Or(False.Then<Expression>(x => new LiteralExpression(BooleanValue.False)));
+                    .Or(False.Then<Expression>(x => new LiteralExpression(BooleanValue.False)))
+                    .Or(identifier.Then<Expression>(x => new VariableExpression(x.Span.ToString())));
 
             var groupExpression = Between(LParen, expression, RParen);
 
