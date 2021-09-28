@@ -12,9 +12,9 @@ namespace Expresso.Values
             _value = value;
         }
 
-        public static BooleanValue Create(bool value) 
-            => value ? True : False;
+        public static BooleanValue Create(bool value) => value ? True : False;
 
         public override bool ToBooleanValue() => _value;
+        public override decimal ToNumericValue() => _value ? 1 : 0;
     }
 }

@@ -49,9 +49,35 @@ namespace Expresso.Tests
         }
 
         [Theory]
-        [InlineData("false or false or true", true)] // false OR (false OR true) > true
         [InlineData("false and false or true", false)] // false AND (false OR true) > false
         public async Task Logical_operators_are_right_associative(string text, bool expectedResult)
+        {
+            (await Evaluate(text)).ShouldBe(expectedResult);
+        }
+
+        [Theory]
+        [InlineData("(false and false) or true", true)]
+        [InlineData("((false and false) or (false or false)) or true", true)]
+        public async Task Supports_grouping_with_parenthesis(string text, bool expectedResult)
+        {
+            (await Evaluate(text)).ShouldBe(expectedResult);
+        }
+
+        [Theory]
+        [InlineData("10 > 0", true)]
+        [InlineData("-10 > 0", false)]
+        [InlineData("10.563 > 10.56", true)]
+        [InlineData("10 > false", true)]
+        [InlineData("0 > false", false)]
+        public async Task Greater_than_comparison(string text, bool expectedResult)
+        {
+            (await Evaluate(text)).ShouldBe(expectedResult);
+        }
+
+        [Theory]
+        [InlineData("10 > 1 and (false or true) ", true)]
+        [InlineData("true and 100 > 1000 ", false)]
+        public async Task Can_combine_comparison_and_logical_operators(string text, bool expectedResult)
         {
             (await Evaluate(text)).ShouldBe(expectedResult);
         }

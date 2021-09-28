@@ -10,23 +10,50 @@ namespace Expresso
     public class ExpressoParser
     {
         protected static readonly Parser<Expression> ExpressionParser;
-
         protected static readonly Parser<string> True = Terms.Text("true", true);
         protected static readonly Parser<string> False = Terms.Text("false", true);
         protected static readonly Parser<string> BinaryAnd = Terms.Text("and", true);
         protected static readonly Parser<string> BinaryOr = Terms.Text("or", true);
+        protected static readonly Parser<char> LParen = Terms.Char('(');
+        protected static readonly Parser<char> RParen = Terms.Char(')');
+        protected static readonly Parser<string> Greater = Terms.Text(">");
 
-        protected static readonly Deferred<Expression> Primary = Deferred<Expression>();
+        //protected static readonly Deferred<Expression> Primary = Deferred<Expression>();
         
         static ExpressoParser()
         {
+            var expression = Deferred<Expression>();
+            
             // primary => NUMBER | STRING | BOOLEAN | property
-            Primary.Parser =
-                True.Then<Expression>(x => new LiteralExpression(BooleanValue.True))
-                .Or(False.Then<Expression>(x => new LiteralExpression(BooleanValue.False)));
+            var literal =
+                Terms.Decimal(NumberOptions.AllowSign).Then<Expression>(x => new LiteralExpression(NumericValue.Create(x)))
+                    .Or(True.Then<Expression>(x => new LiteralExpression(BooleanValue.True)))
+                    .Or(False.Then<Expression>(x => new LiteralExpression(BooleanValue.False)));
 
-            var logicalExpression = Primary.And(
-                ZeroOrMany(BinaryAnd.Or(BinaryOr).And(Primary))).Then(x =>
+            var groupExpression = Between(LParen, expression, RParen);
+
+            var primary = literal.Or(groupExpression);
+
+            var comparator = OneOf(Greater);
+
+            var comparisonExpression = primary.And(ZeroOrMany(comparator.And(primary))).Then(x =>
+            {
+                var result = x.Item1;
+
+                foreach (var op in Enumerable.Reverse(x.Item2))
+                {
+                    result = op.Item1.ToLowerInvariant() switch
+                    {
+                        ">" => new GreaterThanExpression(result, op.Item2),
+                        _ => result
+                    };
+                }
+
+                return result;
+            });
+
+            var logicalExpression = comparisonExpression.And(
+                ZeroOrMany(BinaryAnd.Or(BinaryOr).And(comparisonExpression))).Then(x =>
             {
                 var result = x.Item1;
 
@@ -43,8 +70,8 @@ namespace Expresso
                 return result;
             });
             
-            
-            ExpressionParser = logicalExpression;
+            expression.Parser = logicalExpression;
+            ExpressionParser = expression;
         }
 
         public static bool TryParse(string text, out Expression? expression, out ParseError error)
