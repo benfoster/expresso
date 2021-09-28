@@ -28,6 +28,16 @@ namespace Expresso.Tests
             (await Evaluate(text)).ShouldBe(expectedResult);
         }
 
+        [Theory]
+        [InlineData("true or false", true)]
+        [InlineData("false or true", true)]
+        [InlineData("false or false", false)]
+        [InlineData("FALSE OR TRUE", true)]
+        public async Task Logical_or_boolean_literals(string text, bool expectedResult)
+        {
+            (await Evaluate(text)).ShouldBe(expectedResult);
+        }
+
         private async Task<bool> Evaluate(string text)
         {
             ExpressoParser.TryParse(text, out Expression? expression, out _).ShouldBeTrue();
