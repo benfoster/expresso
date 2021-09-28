@@ -1,9 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFrameworks>net5.0;</TargetFrameworks>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <WarningsAsErrors>nullable;</WarningsAsErrors>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
   </PropertyGroup>
-
+  <ItemGroup>
+    <PackageReference Include="Parlot" Version="0.0.17"/>
+  </ItemGroup>
 </Project>
