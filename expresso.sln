@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30114.105
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{C6C2585C-BD21-41F3-B346-A9649015518B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Expresso", "src\Expresso\Expresso.csproj", "{96EE1AB8-3DF0-4513-8DAB-884B2F93EE2E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{A88F449A-9673-4B72-BDE8-8E336833023A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Expresso.Tests", "test\Expresso.Tests\Expresso.Tests.csproj", "{BBD097E8-E94F-4AA0-A445-CAFA21A354C8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{96EE1AB8-3DF0-4513-8DAB-884B2F93EE2E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96EE1AB8-3DF0-4513-8DAB-884B2F93EE2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96EE1AB8-3DF0-4513-8DAB-884B2F93EE2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96EE1AB8-3DF0-4513-8DAB-884B2F93EE2E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BBD097E8-E94F-4AA0-A445-CAFA21A354C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BBD097E8-E94F-4AA0-A445-CAFA21A354C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BBD097E8-E94F-4AA0-A445-CAFA21A354C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BBD097E8-E94F-4AA0-A445-CAFA21A354C8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{96EE1AB8-3DF0-4513-8DAB-884B2F93EE2E} = {C6C2585C-BD21-41F3-B346-A9649015518B}
+		{BBD097E8-E94F-4AA0-A445-CAFA21A354C8} = {A88F449A-9673-4B72-BDE8-8E336833023A}
+	EndGlobalSection
+EndGlobal
