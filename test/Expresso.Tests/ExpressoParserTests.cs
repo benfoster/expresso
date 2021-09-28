@@ -85,6 +85,7 @@ namespace Expresso.Tests
 
         [Theory]
         [InlineData("price > 10 ", true)]
+        [InlineData("(price > 10) and false", false)]
         public async Task Supports_integer_variables(string text, bool expectedResult)
         {
             var variables = new Dictionary<string, object>
