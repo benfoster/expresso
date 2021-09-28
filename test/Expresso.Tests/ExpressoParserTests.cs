@@ -9,7 +9,9 @@ namespace Expresso.Tests
     {
         [Theory]
         [InlineData("true", true)]
+        [InlineData("TRUE", true)]
         [InlineData("false", false)]
+        [InlineData("FALSE", false)]
         public async Task Parses_boolean_literals(string text, bool expectedResult)
         {
             ExpressoParser.TryParse(text, out Expression? expression, out _).ShouldBeTrue();

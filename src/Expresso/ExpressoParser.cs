@@ -10,10 +10,9 @@ namespace Expresso
     {
         protected static readonly Parser<Expression> ExpressionParser;
 
-        protected static readonly Parser<string> True = Terms.Text("true");
-        protected static readonly Parser<string> False = Terms.Text("false");
+        protected static readonly Parser<string> True = Terms.Text("true", true);
+        protected static readonly Parser<string> False = Terms.Text("false", true);
         protected static readonly Deferred<Expression> Primary = Deferred<Expression>();
-
         
         static ExpressoParser()
         {
