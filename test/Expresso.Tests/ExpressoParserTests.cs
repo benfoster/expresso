@@ -38,6 +38,24 @@ namespace Expresso.Tests
             (await Evaluate(text)).ShouldBe(expectedResult);
         }
 
+        [Theory]
+        [InlineData("true and true and true", true)]
+        [InlineData("false and true and false", false)]
+        [InlineData("false or false or false", false)]
+        [InlineData("false or false or true", true)]
+        public async Task Multiple_logical_operations(string text, bool expectedResult)
+        {
+            (await Evaluate(text)).ShouldBe(expectedResult);
+        }
+
+        [Theory]
+        [InlineData("false or false or true", true)] // false OR (false OR true) > true
+        [InlineData("false and false or true", false)] // false AND (false OR true) > false
+        public async Task Logical_operators_are_right_associative(string text, bool expectedResult)
+        {
+            (await Evaluate(text)).ShouldBe(expectedResult);
+        }
+
         private async Task<bool> Evaluate(string text)
         {
             ExpressoParser.TryParse(text, out Expression? expression, out _).ShouldBeTrue();
