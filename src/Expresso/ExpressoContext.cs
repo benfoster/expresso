@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace Expresso
 {
     public class ExpressoContext
