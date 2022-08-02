@@ -1,7 +1,5 @@
 namespace Expresso.Values
 {
-    using System;
-
     public abstract class ExpressoValue
     {
         public abstract bool ToBooleanValue();
