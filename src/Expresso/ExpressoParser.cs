@@ -16,9 +16,8 @@ namespace Expresso
         protected static readonly Parser<string> Not = Terms.Text("not", true);
         protected static readonly Parser<char> LParen = Terms.Char('(');
         protected static readonly Parser<char> RParen = Terms.Char(')');
-        protected static readonly Parser<string> Greater = Terms.Text(">");
-
-        //protected static readonly Deferred<Expression> Primary = Deferred<Expression>();
+        protected static readonly Parser<string> GreaterThan = Terms.Text(">");
+        protected static readonly Parser<string> LessThan = Terms.Text("<");
         
         static ExpressoParser()
         {
@@ -37,7 +36,7 @@ namespace Expresso
 
             var primary = literal.Or(groupExpression);
 
-            var comparator = OneOf(Greater);
+            var comparator = OneOf(GreaterThan, LessThan);
 
             var comparisonExpression = primary.And(ZeroOrMany(comparator.And(primary))).Then(x =>
             {
@@ -48,6 +47,7 @@ namespace Expresso
                     result = op.Item1.ToLowerInvariant() switch
                     {
                         ">" => new GreaterThanExpression(result, op.Item2),
+                        "<" => new LessThanExpression(result, op.Item2),
                         _ => result
                     };
                 }

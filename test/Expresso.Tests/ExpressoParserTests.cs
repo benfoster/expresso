@@ -107,6 +107,15 @@ namespace Expresso.Tests
             (await Evaluate(text)).ShouldBe(expectedResult);
         }
 
+        [Theory]
+        [InlineData("10 < 0", false)]
+        [InlineData("-10 < 0", true)]
+        [InlineData("0 < 1", true)]
+        public async Task Less_than_comparison(string text, bool expectedResult)
+        {
+            (await Evaluate(text)).ShouldBe(expectedResult);
+        }
+
         private async Task<bool> Evaluate(string text, Dictionary<string, object>? variables = null)
         {
             ExpressoParser.TryParse(text, out Expression? expression, out _).ShouldBeTrue();
