@@ -13,6 +13,7 @@ namespace Expresso
         protected static readonly Parser<string> False = Terms.Text("false", true);
         protected static readonly Parser<string> BinaryAnd = Terms.Text("and", true);
         protected static readonly Parser<string> BinaryOr = Terms.Text("or", true);
+        protected static readonly Parser<string> Not = Terms.Text("not", true);
         protected static readonly Parser<char> LParen = Terms.Char('(');
         protected static readonly Parser<char> RParen = Terms.Char(')');
         protected static readonly Parser<string> Greater = Terms.Text(">");
@@ -73,7 +74,10 @@ namespace Expresso
             });
             
             expression.Parser = logicalExpression;
-            ExpressionParser = expression;
+            ExpressionParser = ZeroOrOne(Not).And(expression)
+                .Then<Expression>(e => e.Item1 == null
+                    ? e.Item2
+                    : new NegateExpression(e.Item2));
         }
 
         public static bool TryParse(string text, out Expression? expression, out ParseError error)

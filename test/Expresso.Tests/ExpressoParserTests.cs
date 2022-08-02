@@ -96,6 +96,17 @@ namespace Expresso.Tests
             (await Evaluate(text, variables)).ShouldBe(expectedResult);
         }
 
+        [Theory]
+        [InlineData("not true", false)]
+        [InlineData("not false", true)]
+        [InlineData("not (-10 > 0)", true)]
+        [InlineData("not (10.563 > 10.56)", false)]
+        [InlineData("not false and (4 > 3)", true)]
+        public async Task UseNegation(string text, bool expectedResult)
+        {
+            (await Evaluate(text)).ShouldBe(expectedResult);
+        }
+
         private async Task<bool> Evaluate(string text, Dictionary<string, object>? variables = null)
         {
             ExpressoParser.TryParse(text, out Expression? expression, out _).ShouldBeTrue();
